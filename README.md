@@ -38,8 +38,8 @@ O ObraControl permite o controle centralizado de materiais utilizados em obras, 
 
 ```bash
 # Clone o repositório
-git clone https://github.com/Joao21-dev/obracontrol.git
-cd obracontrol
+git clone https://github.com/Joao21-dev/ObraControl.git
+cd ObraControl
 
 # Crie e ative um ambiente virtual
 python -m venv venv
