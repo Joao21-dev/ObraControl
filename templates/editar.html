@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <title>Editar Material</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    </head>
+    <body class="bg-light">
+        <div class="bg-light">
+            <div class="container mt-5">
+                <h2>✏️ Editar Material</h2>
+                <form method="POST">
+                    <div class="mb-3">
+                        <label>Nome</label>
+                        <input class="form-control" name="nome" value="{{ material.nome }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label>Categoria</label>
+                        <input class="form-control" name="categoria" value="{{ material.categoria }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label>Quantidade</label>
+                        <input class="form-control" type="number" name="quantidade" value="{{ material.quantidade }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label>Unidade</label>
+                        <input class="form-control" name="unidade" value="{{ material.unidade }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label>Valor</label>
+                        <input class="form-control" type="number" step="0.01" name="valor" value="{{material.valor }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label>Fornecedor</label>
+                        <input class="form-control" name="fornecedor" value="{{ material.fornecedor }}" required>
+                    </div>
+
+                    <button class="btn btn-success">Salvar Alterações</button>
+                    <a href="/" class="btn btn-secondary">Cancelar</a>
+
+                </form>
+        </div>
+    </body>
+</html>
