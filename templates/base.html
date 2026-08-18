@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}ObraControl{% endblock %}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="oc-shell">
+
+  <aside class="oc-sidebar">
+    <div class="oc-brand">
+      <div class="oc-brand-mark">OC</div>
+      <div>
+        <div class="oc-brand-text">ObraControl</div>
+        <div class="oc-brand-sub">Gestão de materiais</div>
+      </div>
+    </div>
+
+    <nav class="oc-nav">
+      <a href="{{ url_for('index') }}" class="{% if request.endpoint == 'index' %}active{% endif %}">
+        <span class="oc-nav-icon">▤</span> Materiais
+      </a>
+      {# Próximas seções, já deixadas previstas na navegação:
+      <a href="#"><span class="oc-nav-icon">◆</span> Obras</a>
+      <a href="#"><span class="oc-nav-icon">↕</span> Movimentações</a>
+      <a href="#"><span class="oc-nav-icon">▦</span> Dashboard</a>
+      #}
+    </nav>
+
+    <div class="oc-sidebar-footer">
+      ObraControl © 2026<br>
+      Python + Flask + SQLite
+    </div>
+  </aside>
+
+  <main class="oc-main">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="oc-alert oc-alert-{{ category }}" role="alert">
+            <span>{{ message }}</span>
+            <button type="button" class="oc-alert-close" onclick="this.parentElement.remove()" aria-label="Fechar">✕</button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+</div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

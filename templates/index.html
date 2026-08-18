@@ -1,163 +1,88 @@
-<!DOCTYPE html>
-<html lang="pt-br">
+{% extends "base.html" %}
+{% block title %}Materiais · ObraControl{% endblock %}
 
-<head>
+{% block content %}
 
-<meta charset="UTF-8">
-
-<title>ObraControl</title>
-<div class="row mb -4">
-<div class="col-md-3">
-<div class="card shadow text-center">
-<div class="card-body">
-<h5>📦 Materiais</h5>
-<h2>{{ total_materiais }}</h2>
-</div>
-</div>
-</div>
-<div class="col-md-3">
-<div class="card shadow text-center">
-<div class="card-body">
-<h5>📂 Categorias</h5>
-<h2>{{ categorias }}</h2>
-</div>
-</div>
-</div>
-<div class="col-md-3">
-<div class="card shadow text-center">
-<div class="card-body">
-<h5>⚠ Estoque Baixo</h5>
-<h2>{{ estoque_baixo }}</h2>
-</div>
-</div>
-</div>
+<div class="oc-topbar">
+  <div>
+    <div class="oc-eyebrow">Painel</div>
+    <h1 class="oc-title">Materiais</h1>
+  </div>
 </div>
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
-
-</head>
-
-<body class="bg-light">
-    <nav class="navbar navbar-expand lg navbar-dark bg-primary shadow">
-        <div class="container">
-            <a class="navbar-brand fw-bold fs-3" href="/">🏗️ ObraControl</a>
-            <span class="navbar-text text-white">Sistema de Gerenciamento de Materiais</span>
-        </div>
-    </nav>
-
-<div class="container mt-5">
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-
-            {% for category, message in messages %}
-
-                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-
-                    {{ message }}
-
-                    <button type="button"
-                            class="btn-close"
-                            data-bs-dismiss="alert">
-                    </button>
-
-                </div>
-
-            {% endfor %}
-
-        {% endif %}
-    {% endwith %}
-
-<div class="d-flex justify-content-between mb-4">
-
-<form method="GET" class="mb-4">
-    <div class="input-group">
-        <input type="text" class="form-control" name="pesquisa" placeholder="Pesquisar material..." value="{{ pesquisa  }}">
-        <button class="btn btn-dark" type="submit">🔍 Pesquisar</button>
-    </div>
-</form>
-
-<a href="/cadastrar" class="btn btn-primary">
-➕ Novo Material
-</a>
-
+<div class="oc-stats">
+  <div class="oc-stat">
+    <div class="oc-stat-label">Materiais cadastrados</div>
+    <div class="oc-stat-value">{{ total_materiais }}</div>
+  </div>
+  <div class="oc-stat">
+    <div class="oc-stat-label">Categorias</div>
+    <div class="oc-stat-value">{{ categorias }}</div>
+  </div>
+  <div class="oc-stat">
+    <div class="oc-stat-label">Estoque baixo</div>
+    <div class="oc-stat-value">{{ estoque_baixo }}</div>
+  </div>
+  <div class="oc-stat">
+    <div class="oc-stat-label">Valor em estoque</div>
+    <div class="oc-stat-value">R$ {{ "%.2f"|format(valor_total) }}</div>
+  </div>
 </div>
 
-<table class="table table-hover table-bordered align-middle shadow">
+<div class="oc-panel">
+  <div class="oc-toolbar">
+    <form method="GET" class="oc-search">
+      <input type="text" class="oc-input" name="pesquisa" placeholder="Pesquisar material..." value="{{ pesquisa }}">
+      <button class="oc-btn oc-btn-ghost" type="submit">Buscar</button>
+    </form>
+    <a href="{{ url_for('cadastrar') }}" class="oc-btn oc-btn-accent">+ Novo material</a>
+  </div>
 
-<thead>
-
-<tr>
-
-<th class="text-center">Nome</th>
-
-<th class="text-center">Categoria</th>
-
-<th class="text-center">Quantidade</th>
-
-<th class="text-center">Unidade</th>
-
-<th class="text-center">Valor</th>
-
-<th class="text-center">Fornecedor</th>
-
-<th class="text-center">Ações</th>
-
-</tr>
-
-</thead>
-
-<tbody>
-
-{% for material in materiais %}
-
-<tr>
-
-<td>{{ material.nome }}</td>
-<td>{{ material.categoria }}</td>
-<td class="text-center">
-{% if material.quantidade < 5 %}
-<span class="badge bg-danger">
-{{ material.quantidade }}
-</span>
-{% else %}
-<span class="badge bg-success">
-{{ material.quantidade }}
-</span>
-{% endif %}
-</td>
-<td>{{ material.unidade }}</td>
-<td>R$ {{ "%.2f"|format(material.valor) }}</td>
-<td>{{ material.fornecedor }}</td>
-<td class="text-center">
-    <a href="/editar/{{ material.id }}" class="btn btn-warning">
-        ✏️
-    </a>
-    <a href="/excluir/{{ material.id }}" class="btn btn-danger"
-    onclick="return confirm('Deseja excluir este material?')">
-        🗑️
-    </a>
-</td>
-</tr>
-
-{% endfor %}
-
-</tbody>
-
-</table>
-
+  {% if materiais %}
+  <table class="oc-table">
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Categoria</th>
+        <th>Estoque</th>
+        <th>Unidade</th>
+        <th>Valor</th>
+        <th>Fornecedor</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for material in materiais %}
+      {% set nivel = 100 if material.quantidade >= 20 else (material.quantidade / 20 * 100) %}
+      <tr>
+        <td>{{ material.nome }}</td>
+        <td><span class="oc-badge oc-badge-cat">{{ material.categoria }}</span></td>
+        <td>
+          <div class="oc-gauge">
+            <div class="oc-gauge-track">
+              <div class="oc-gauge-fill {% if material.quantidade < 5 %}low{% endif %}" style="width: {{ nivel }}%;"></div>
+            </div>
+            <span class="oc-gauge-value oc-mono">{{ material.quantidade }}</span>
+          </div>
+        </td>
+        <td class="oc-mono">{{ material.unidade }}</td>
+        <td class="oc-mono">R$ {{ "%.2f"|format(material.valor) }}</td>
+        <td>{{ material.fornecedor }}</td>
+        <td>
+          <a href="{{ url_for('editar', id=material.id) }}" class="oc-btn oc-btn-ghost oc-btn-sm">Editar</a>
+          <a href="{{ url_for('excluir', id=material.id) }}" class="oc-btn oc-btn-warn oc-btn-sm"
+             onclick="return confirm('Deseja excluir este material?')">Excluir</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="oc-empty">
+    <div class="oc-empty-title">Nenhum material encontrado</div>
+    <p>{% if pesquisa %}Nenhum resultado para "{{ pesquisa }}".{% else %}Cadastre o primeiro material para começar.{% endif %}</p>
+  </div>
+  {% endif %}
 </div>
-<footer class="text-center mt-5 mb-3 text-muted">
 
-<hr>
-
-ObraControl © 2026
-
-<br>
-
-Desenvolvido em Python + Flask + SQLite
-
-</footer>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-
-</html>
+{% endblock %}
