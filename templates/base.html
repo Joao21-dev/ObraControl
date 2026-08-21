@@ -23,16 +23,17 @@
       <a href="{{ url_for('index') }}" class="{% if request.endpoint == 'index' %}active{% endif %}">
         <span class="oc-nav-icon">▤</span> Materiais
       </a>
-      {# Próximas seções, já deixadas previstas na navegação:
-      <a href="#"><span class="oc-nav-icon">◆</span> Obras</a>
-      <a href="#"><span class="oc-nav-icon">↕</span> Movimentações</a>
-      <a href="#"><span class="oc-nav-icon">▦</span> Dashboard</a>
-      #}
+      <a href="{{ url_for('obras') }}" class="{% if request.endpoint in ['obras', 'nova_obra', 'editar_obra'] %}active{% endif %}">
+        <span class="oc-nav-icon">◆</span> Obras
+      </a>
+      <a href="{{ url_for('movimentacoes') }}" class="{% if request.endpoint in ['movimentacoes', 'nova_movimentacao'] %}active{% endif %}">
+        <span class="oc-nav-icon">↕</span> Movimentações
+      </a>
     </nav>
 
     <div class="oc-sidebar-footer">
       ObraControl © 2026<br>
-      Python + Flask + SQLite
+      Python + Flask + PostgreSQL
     </div>
   </aside>
 
@@ -51,6 +52,13 @@
     {% block content %}{% endblock %}
   </main>
 
+</div>
+
+<div id="modal-overlay" class="oc-modal-overlay hidden">
+  <div class="oc-modal">
+    <button type="button" class="oc-modal-close js-modal-close" aria-label="Fechar">✕</button>
+    <div id="modal-body"></div>
+  </div>
 </div>
 
 <script src="{{ url_for('static', filename='script.js') }}"></script>

@@ -1,0 +1,61 @@
+<div class="oc-topbar">
+  <div>
+    <div class="oc-eyebrow">Materiais</div>
+    <h1 class="oc-title">Editar material</h1>
+  </div>
+</div>
+
+<div class="oc-form-card">
+  <form method="POST" action="{{ url_for('editar', id=material.id) }}">
+    <div class="oc-field">
+      <label class="oc-label">Nome</label>
+      <input class="oc-input" name="nome" maxlength="45" value="{{ material.nome }}" required>
+    </div>
+
+    <div class="oc-field-row">
+      <div class="oc-field">
+        <label class="oc-label">Categoria</label>
+        <select class="oc-input js-categoria" name="categoria" required data-mapping='{{ categorias_unidades|tojson }}' data-current-unidade="{{ material.unidade }}">
+          {% if material.categoria not in categorias_unidades %}
+          <option value="{{ material.categoria }}" selected>{{ material.categoria }} (categoria antiga)</option>
+          {% endif %}
+          {% for cat in categorias_unidades.keys() %}
+          <option value="{{ cat }}" {% if cat == material.categoria %}selected{% endif %}>{{ cat }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="oc-field">
+        <label class="oc-label">Unidade</label>
+        <select class="oc-input js-unidade" name="unidade" required>
+          <option value="{{ material.unidade }}" selected>{{ material.unidade }}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="oc-field-row">
+      <div class="oc-field">
+        <label class="oc-label">Quantidade</label>
+        <input class="oc-input" type="number" name="quantidade" min="0" value="{{ material.quantidade }}" required>
+      </div>
+      <div class="oc-field">
+        <label class="oc-label">Valor unitário</label>
+        <div class="oc-currency">
+          <span class="oc-currency-prefix">R$</span>
+          <input class="oc-input oc-currency-input js-valor-visual" type="text" inputmode="decimal"
+                 value="{{ '%.2f'|format(material.valor)|replace('.', ',') }}" maxlength="14" required>
+        </div>
+        <input type="hidden" name="valor" class="js-valor-hidden" value="{{ material.valor }}">
+      </div>
+    </div>
+
+    <div class="oc-field">
+      <label class="oc-label">Fornecedor</label>
+      <input class="oc-input" name="fornecedor" maxlength="45" value="{{ material.fornecedor }}" required>
+    </div>
+
+    <div class="oc-form-actions">
+      <button class="oc-btn oc-btn-accent">Salvar alterações</button>
+      <a href="{{ url_for('index') }}" class="oc-btn oc-btn-ghost js-modal-cancel">Cancelar</a>
+    </div>
+  </form>
+</div>

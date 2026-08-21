@@ -1,0 +1,15 @@
+services:
+  db:
+    image: postgres:16
+    restart: always
+    environment:
+      POSTGRES_USER: obracontrol
+      POSTGRES_PASSWORD: obracontrol
+      POSTGRES_DB: obracontrol
+    ports:
+      - "5432:5432"
+    volumes:
+      - obracontrol_pgdata:/var/lib/postgresql/data
+
+volumes:
+  obracontrol_pgdata:

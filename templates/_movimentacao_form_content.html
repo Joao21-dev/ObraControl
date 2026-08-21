@@ -1,0 +1,66 @@
+<div class="oc-topbar">
+  <div>
+    <div class="oc-eyebrow">Movimentações</div>
+    <h1 class="oc-title">{{ "Editar movimentação" if mov else "Nova movimentação" }}</h1>
+  </div>
+</div>
+
+<div class="oc-form-card">
+  <div class="js-form-alert"></div>
+  <form method="POST" action="{{ url_for('editar_movimentacao', id=mov.id) if mov else url_for('nova_movimentacao') }}">
+    <div class="oc-field-row">
+      <div class="oc-field">
+        <label class="oc-label">Material</label>
+        <select class="oc-input" name="material_id" required>
+          {% for material in materiais %}
+          <option value="{{ material.id }}" {% if mov and material.id == mov.material_id %}selected{% endif %}>
+            {{ material.nome }} ({{ material.quantidade }} {{ material.unidade }} em estoque)
+          </option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="oc-field">
+        <label class="oc-label">Obra</label>
+        <select class="oc-input" name="obra_id" required>
+          {% for obra in obras %}
+          <option value="{{ obra.id }}"
+            {% if mov and obra.id == mov.obra_id %}selected
+            {% elif not mov and obra_id and obra.id == obra_id %}selected{% endif %}>
+            {{ obra.nome }}
+          </option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+
+    <div class="oc-field-row">
+      <div class="oc-field">
+        <label class="oc-label">Tipo</label>
+        <select class="oc-input" name="tipo" required>
+          <option value="saida" {% if not mov or mov.tipo == "saida" %}selected{% endif %}>Saída (uso na obra)</option>
+          <option value="entrada" {% if mov and mov.tipo == "entrada" %}selected{% endif %}>Entrada (recebimento)</option>
+        </select>
+      </div>
+      <div class="oc-field">
+        <label class="oc-label">Quantidade</label>
+        <input class="oc-input" type="number" name="quantidade" min="1" value="{{ mov.quantidade if mov else '' }}" required>
+      </div>
+    </div>
+
+    <div class="oc-field-row">
+      <div class="oc-field">
+        <label class="oc-label">Data</label>
+        <input class="oc-input" type="date" name="data" value="{{ mov.data.isoformat() if mov and mov.data else '' }}">
+      </div>
+      <div class="oc-field">
+        <label class="oc-label">Observação</label>
+        <input class="oc-input" name="observacao" maxlength="200" placeholder="opcional" value="{{ mov.observacao if mov else '' }}">
+      </div>
+    </div>
+
+    <div class="oc-form-actions">
+      <button class="oc-btn oc-btn-accent">{{ "Salvar alterações" if mov else "Registrar movimentação" }}</button>
+      <a href="{{ url_for('movimentacoes') }}" class="oc-btn oc-btn-ghost js-modal-cancel">Cancelar</a>
+    </div>
+  </form>
+</div>

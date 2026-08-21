@@ -35,7 +35,7 @@
       <input type="text" class="oc-input" name="pesquisa" placeholder="Pesquisar material..." value="{{ pesquisa }}">
       <button class="oc-btn oc-btn-ghost" type="submit">Buscar</button>
     </form>
-    <a href="{{ url_for('cadastrar') }}" class="oc-btn oc-btn-accent">+ Novo material</a>
+    <a href="{{ url_for('cadastrar') }}" class="oc-btn oc-btn-accent js-modal-link">+ Novo material</a>
   </div>
 
   {% if materiais %}
@@ -69,7 +69,7 @@
         <td class="oc-mono">R$ {{ "%.2f"|format(material.valor) }}</td>
         <td>{{ material.fornecedor }}</td>
         <td>
-          <a href="{{ url_for('editar', id=material.id) }}" class="oc-btn oc-btn-ghost oc-btn-sm">Editar</a>
+          <a href="{{ url_for('editar', id=material.id) }}" class="oc-btn oc-btn-ghost oc-btn-sm js-modal-link">Editar</a>
           <a href="{{ url_for('excluir', id=material.id) }}" class="oc-btn oc-btn-warn oc-btn-sm"
              onclick="return confirm('Deseja excluir este material?')">Excluir</a>
         </td>

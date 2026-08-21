@@ -1,0 +1,5 @@
+{% extends "base.html" %}
+{% block title %}{{ "Editar obra" if obra else "Nova obra" }} · ObraControl{% endblock %}
+{% block content %}
+{% include "_obra_form_content.html" %}
+{% endblock %}

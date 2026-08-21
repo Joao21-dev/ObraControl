@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Obras · ObraControl{% endblock %}
+
+{% block content %}
+
+<div class="oc-topbar">
+  <div>
+    <div class="oc-eyebrow">Painel</div>
+    <h1 class="oc-title">Obras</h1>
+  </div>
+</div>
+
+<div class="oc-stats">
+  <div class="oc-stat">
+    <div class="oc-stat-label">Total de obras</div>
+    <div class="oc-stat-value">{{ total_obras }}</div>
+  </div>
+  <div class="oc-stat">
+    <div class="oc-stat-label">Obras ativas</div>
+    <div class="oc-stat-value">{{ ativas }}</div>
+  </div>
+</div>
+
+<div class="oc-panel">
+  <div class="oc-toolbar">
+    <div></div>
+    <a href="{{ url_for('nova_obra') }}" class="oc-btn oc-btn-accent js-modal-link">+ Nova obra</a>
+  </div>
+
+  {% if obras %}
+  <table class="oc-table">
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Endereço</th>
+        <th>Início</th>
+        <th>Status</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for obra in obras %}
+      <tr>
+        <td>{{ obra.nome }}</td>
+        <td>{{ obra.endereco or "—" }}</td>
+        <td class="oc-mono">{{ obra.data_inicio.strftime("%d/%m/%Y") if obra.data_inicio else "—" }}</td>
+        <td>
+          {% if obra.ativa %}
+            <span class="oc-badge" style="background: var(--ok-soft); color: var(--ok);">Ativa</span>
+          {% else %}
+            <span class="oc-badge" style="background: var(--warn-soft); color: var(--warn);">Concluída</span>
+          {% endif %}
+        </td>
+        <td>
+          <a href="{{ url_for('movimentacoes', obra_id=obra.id) }}" class="oc-btn oc-btn-ghost oc-btn-sm">Movimentações</a>
+          <a href="{{ url_for('editar_obra', id=obra.id) }}" class="oc-btn oc-btn-ghost oc-btn-sm js-modal-link">Editar</a>
+          <a href="{{ url_for('excluir_obra', id=obra.id) }}" class="oc-btn oc-btn-warn oc-btn-sm"
+             onclick="return confirm('Deseja excluir esta obra?')">Excluir</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="oc-empty">
+    <div class="oc-empty-title">Nenhuma obra cadastrada</div>
+    <p>Cadastre a primeira obra para começar a registrar movimentações de material.</p>
+  </div>
+  {% endif %}
+</div>
+
+{% endblock %}

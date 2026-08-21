@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}Movimentações · ObraControl{% endblock %}
+
+{% block content %}
+
+<div class="oc-topbar">
+  <div>
+    <div class="oc-eyebrow">Painel</div>
+    <h1 class="oc-title">Movimentações</h1>
+  </div>
+</div>
+
+<div class="oc-panel">
+  <div class="oc-toolbar">
+    <form method="GET" class="oc-search" style="max-width: 260px;">
+      <select class="oc-input" name="obra_id" onchange="this.form.submit()">
+        <option value="">Todas as obras</option>
+        {% for obra in obras %}
+        <option value="{{ obra.id }}" {% if obra_id == obra.id %}selected{% endif %}>{{ obra.nome }}</option>
+        {% endfor %}
+      </select>
+    </form>
+    <a href="{{ url_for('nova_movimentacao') }}" class="oc-btn oc-btn-accent js-modal-link">+ Nova movimentação</a>
+  </div>
+
+  {% if movimentacoes %}
+  <table class="oc-table">
+    <thead>
+      <tr>
+        <th>Data</th>
+        <th>Tipo</th>
+        <th>Material</th>
+        <th>Obra</th>
+        <th>Quantidade</th>
+        <th>Observação</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for mov in movimentacoes %}
+      <tr>
+        <td class="oc-mono">{{ mov.data.strftime("%d/%m/%Y") }}</td>
+        <td>
+          {% if mov.tipo == "entrada" %}
+            <span class="oc-badge" style="background: var(--ok-soft); color: var(--ok);">Entrada</span>
+          {% else %}
+            <span class="oc-badge" style="background: var(--warn-soft); color: var(--warn);">Saída</span>
+          {% endif %}
+        </td>
+        <td>{{ mov.material.nome }}</td>
+        <td>{{ mov.obra.nome }}</td>
+        <td class="oc-mono">{{ mov.quantidade }} {{ mov.material.unidade }}</td>
+        <td>{{ mov.observacao or "—" }}</td>
+        <td>
+          <a href="{{ url_for('editar_movimentacao', id=mov.id) }}" class="oc-btn oc-btn-ghost oc-btn-sm js-modal-link">Editar</a>
+          <a href="{{ url_for('excluir_movimentacao', id=mov.id) }}" class="oc-btn oc-btn-warn oc-btn-sm"
+             onclick="return confirm('Excluir esta movimentação? O estoque do material será ajustado de volta.')">Excluir</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="oc-empty">
+    <div class="oc-empty-title">Nenhuma movimentação registrada</div>
+    <p>Registre entradas e saídas de material por obra para acompanhar o consumo ao longo do tempo.</p>
+  </div>
+  {% endif %}
+</div>
+
+{% endblock %}

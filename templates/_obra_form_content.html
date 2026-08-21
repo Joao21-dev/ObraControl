@@ -1,0 +1,42 @@
+<div class="oc-topbar">
+  <div>
+    <div class="oc-eyebrow">Obras</div>
+    <h1 class="oc-title">{{ "Editar obra" if obra else "Nova obra" }}</h1>
+  </div>
+</div>
+
+<div class="oc-form-card">
+  <form method="POST" action="{{ url_for('editar_obra', id=obra.id) if obra else url_for('nova_obra') }}">
+    <div class="oc-field">
+      <label class="oc-label">Nome da obra</label>
+      <input class="oc-input" name="nome" maxlength="80" value="{{ obra.nome if obra else '' }}" required>
+    </div>
+
+    <div class="oc-field">
+      <label class="oc-label">Endereço</label>
+      <input class="oc-input" name="endereco" maxlength="150" value="{{ obra.endereco if obra else '' }}">
+    </div>
+
+    <div class="oc-field-row">
+      <div class="oc-field">
+        <label class="oc-label">Data de início</label>
+        <input class="oc-input" type="date" name="data_inicio"
+               value="{{ obra.data_inicio.isoformat() if obra and obra.data_inicio else '' }}">
+      </div>
+      {% if obra %}
+      <div class="oc-field">
+        <label class="oc-label">Status</label>
+        <select class="oc-input" name="ativa">
+          <option value="1" {% if obra.ativa %}selected{% endif %}>Ativa</option>
+          <option value="" {% if not obra.ativa %}selected{% endif %}>Concluída</option>
+        </select>
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="oc-form-actions">
+      <button class="oc-btn oc-btn-accent">Salvar obra</button>
+      <a href="{{ url_for('obras') }}" class="oc-btn oc-btn-ghost js-modal-cancel">Cancelar</a>
+    </div>
+  </form>
+</div>
